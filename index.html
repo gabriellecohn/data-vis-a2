@@ -1,0 +1,201 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<title>Vis & Society Assignment 2</title>
+	<link rel="stylesheet" href="https://vis-society.github.io/assignments/report.css" />
+</head>
+
+<body>
+	<header>
+		<h1>
+			<small>Assignment 2</small>
+			Exploratory Data Analysis
+		</h1>
+
+		<p>
+			<strong>Gabrielle Cohn</strong> — <em>gcohn@mit.edu</em>
+		</p>
+	</header>
+	<!-- TODO 1: Exploratory analysis  -->
+	<!-- TODO 2: Investigate questions -->
+	<!-- TODO 3: Follow up on questions -->
+	<!-- TODO 4: Brief summary of lessons learned -->
+	<main>
+		<section>
+			<h2>Subtheme: Corporate Landlords & Evictions</h2>
+
+			<h3>Overall Analysis Questions</h3>
+			<ol>
+				<li>How have corporate ownership rates and owner occupancy rates changed over time in Boston?</li>
+				<li>How are corporate ownership rates and owner occupancy related to each other?</li>
+				<li>What does the demographic distribution of Boston look like?</li>
+			</ol>
+		</section>
+
+		<section>
+			<h2>Exploratory Analysis</h2>
+
+			<h3>Datasets:</h3>
+			<ul>
+				<li><b>Corporate ownership rates and owner occupancy rates in Boston neighborhoods, 2004-2024</b></li>
+				<ul>
+					<li><b>Census and Corp Ownership and Occupancy Over Time</b>. This file contains information about owner occupancy and corporate ownership by year (2004 to 2004) and neighborhood as well as census data by neighborhood from the year 2020.</li>
+					<li><b>Boston Neighborhood Zipcodes</b>. This file contains a list of boston neighborhood names and their corresponding zipcodes.</li>
+				</ul>
+				<li><b>Boston Neighborhood Boundaries</b>. This is a geojson I downloaded from "Analyze Boston", which maps zipcodes to neighborhood names.</li>
+				<li><b>Boston geojson</b>. This is a geojson I downloaded from <a href="https://github.com/blackmad/neighborhoods/blob/master/boston.geojson">GitHub</a>, which maps directly to neighborhood names (reason explained in the Visualizations section).</li>
+			</ul>
+
+			<h3>Use of Generative AI:</h3>
+			<p>I used generative AI to help me with Tableau commands (e.g. how to make a particular graph, or how to restructure a table).</p>
+
+			<h3>Visualizations:</h3>
+			<p>My first step was to open my data in Tableau, and start exploring some of the values. I quickly observed that most of the data did not vary by year:</p>
+			<figure>
+				<img src="flat_values.png" alt="" />
+				<figcaption>
+				Note that the population count for this subgroup does not vary by year.
+				</figcaption>
+			</figure>
+			<p>When I looked at the associated metadata file, this confusion was resolved, as I saw that the population data is just gathered from a single census in 2020. These fixed values have been spread across all years (2004 to 2024). From this observation, I realized that I would not be able to answer questions about changes in demographics over time. However, I still had neighborhood spatial data, and temporal data for ownernship.</p>
+			<p>Utilizing the spatial component of the data, I looked at different subpopulations grouped by neighborhood. For example, "college" vs "neighborhood" is shown below. "college" indicates individuals living in college or university housing. </p>
+			<figure>
+				<img src="college_v_neighborhood.png" alt="" />
+				<figcaption>
+				Individuals living in college or university housing aggregated by neighborhoods.
+				</figcaption>
+			</figure>
+			<p>From this, I could see that many neighborhoods had 0 individuals living in college housing, while the majority of individuals in college housing seemed to be in Fenway. This spiky distribution seems makes sense since college housing will likely be near the college, not spread evenly throughout the city. A bit of Googling told me that Boston University and several other colleges have housing in Fenway. The neighborhood where I live is not included since it's in Cambridge not Boston, but I did learn that Charlestown is part of Boston despite being on this side of the river!</p>
+			<p>Next, I saw that some columns in the data were related to each other. For example, We have "Aapi 0 17" "Aapi 18Plus", and Aapi All". The first two are subsets of the last one, but they were all presented in a flattened manner. Additionally, the two pieces of demographic information, age and race, were being bundled together. I describe how I restructured the data using pivot tables to make it easier to work with in the Investigate Questions section.</p>
+			<p>After exploring a few demographic fields, I took a look at the temporal ownership data:
+			<figure>
+				<img src="avg_corp_year.png" alt="" />
+				<figcaption>
+				Average corporate ownership rate by year from 2004 to 2024 (averaged across neighborhoods).
+				</figcaption>
+			</figure>
+			<p>As we can see, corporate ownership rates have greatly increased since 2004. This trend will be broken down in more detail in the Investigation Questions section.</p>
+			<p>Having looked at a few fields via bar and line charts, I was excited to use my geojson data and actually see how things looked on a map of the city. I created a new plot, and colored it using average corporate ownership rate per neighborhood.</p>
+			<figure>
+				<img src="corp_by_neighborhood.png" alt="" />
+				<figcaption>
+				Corporate ownership rate by neighborhood averaged across years (2004 to 2024).
+				</figcaption>
+			</figure>
+			<p>Averaging across all years flattened the temporal aspect of the data, but despite this I could see that some neighborhoods had a higher average rate of corporate ownership than others. For example, the Waterfront and Downtown were a darker blue. Looking at this map, I also realized that my geojson data had some extra nieghborhoods that didn't seem to match up with a name. These neighborhoods are shown in the map below.</p>
+
+			<figure>
+				<img src="nameless_neighborhood.png" alt="" />
+				<figcaption>
+				Neighborhoods from the geojson data that are not associated with a name.
+				</figcaption>
+			</figure>
+            <p>At this point, I was mapping from ownership and census data to Boston Neighborhoods and Zipcode data to zipcode-based geojson data, so things were a little confusing. To diagnose my issue, I tried looking at these neighborhoods in a different way by comparing our corporate ownership rate data to the neighborhoods from the Boston Neighborhoods and Zipcode data. </p>
+			<figure>
+				<img src="boston_v_corp.png" alt="" />
+				<figcaption>
+				Average corporate ownership rate by neighborhood from the Boston Neighborhoods and Zipcode data.
+				</figcaption>
+			</figure>
+			<p>From this, I could see that there were two neighborhoods present in this file that are not present in our census and corporate ownership file, namely Back Bay and Mission Hill. I also recalled Fenway from my previous visualization and saw that it was missing - or rather, appeared to have been folded into "Downtown" (judging by the map). Overall, I could see that the two data files were not exactly aligned in how they determined neighborhoods. To address this, I located a different geojson which mapped directly to neighborhood names so that we wouldn't have to go through the "middle man" of the Boston Neighborhoods and Zipcode data.</p>
+			<figure>
+				<img src="corp_by_neighborhood_2.png" alt="" />
+				<figcaption>
+					Average corporate ownership rate by year from 2004 to 2024 (averaged across neighborhoods) using updated geojson data.
+				</figcaption>
+			</figure>
+			<p> My new geojson data also had some additional neighborhoods that were not present in the census and corporate ownership file (like the previous geojson, this one also had Back Bay in addition to several others) but importantly it wasn't <i>missing</i> neighborhoods. In future map visualizations, I simply filtered out the neighborhoods that are not present in our census data file. However, I think there are still questions worth exploring here. For example, it's very possible that "Back Bay" simply got folded into "Downtown" in the census data, which is something we would need to figure out to create a truly accurate map.  </p>
+		</section>
+		<section>
+			<h2>Investigate Questions</h2>
+			<p>At this point, I decided it was time to start investigating my questions. My first question was <h4>"How have corporate ownership rates and owner occupancy rates changed over time in Boston?"</h4> I decided to start simple, and just look at how corporate ownership rates varied by neighborhood over time.</p>
+			<figure>
+				<img src="corp_by_time_by_neighborhood.png" alt="" />
+				<figcaption>
+				Corporate ownership by rate over time colored by neighborhood.
+				</figcaption>
+			</figure>
+			<p>As we can see, corporate ownership rates have greatly increased in many neighborhoods. However, because there are a lot of neighborhoods it's a bit hard to see the details. I started thinking about how to make my question more specific, and consequently refine our visualization. We can see that rate went up for many neighborhoods, but for which did it increase the most from 2004 to 2024? I created a new computed field by dividing the rate in 2024 by the rate in 2004, and created a bar chart (not included here). However, this chart only showed relative increase - I also wanted to see the absolute rate of corporate ownership in 2024. That led me to the following dual-axis chart:</p>
+			<figure>
+				<img src="dual_axis_corp.png" alt="" />
+				<figcaption>
+				Corporate ownership ratio (2024/2004) in blue and absolute rate (2024) by neighborhood in orange.
+				</figcaption>
+			</figure>
+			<p>West Roxbury seems to have had the highest relative increase in rate of corporate ownership, with the rate in 2024 being more than 12 times the rate in 2004. Despite this, however, it still had one of the lowest absolute rates in 2024. The highest absolute rate of corporate ownership in 2024 belonged to the South Boston Waterfront. Dorchester had one of the lower rates of corporate ownership and hadn't changed much over time, while Chinatown had an intermediate rate in 2024 and had changed the least since 2004. Personally, I find this chart easier to read than Figure 8, but we do lose some of the nuance, e.g. how rates have bounced up and down over time.</p>
+			<p>As an an experiment in how we might keep both temporal and spatial nuance while remaining easily interpretable, I also played around with animation:</p>
+			<figure>
+				<img src="corp_own_anim_speed.gif" alt="" />
+				<figcaption>
+				Map of Boston (Colored by Corporate ownership rate per year from 2004 to 2024).
+				</figcaption>
+			</figure>
+			<p>The map stays pretty light blue until 2018, at which point it seems like corporate ownership rates increase rapidly.</p>
+			<p>Having looked at corporate ownership rates a few different ways, I went on to investigate owner occupancy rates. First, I created a line plot similar to Figure 8:</p>
+			<figure>
+				<img src="own_occ_by_year.png" alt="" />
+				<figcaption>
+				Owner Occupany rate over time colored by neighborhood.
+				</figcaption>
+			</figure>
+			<p>These trend lines look a lot more flat than the corporate ownership lines. Some neighborhoods like Brighton droped from ~0.4 to ~0.2, but some, like Allston, barely changed at all. For my second question, <h4>"How are corporate ownership rates and owner occupancy rates related to each other?"</h4> I wanted to explore the relationship between the two fields. I compared the values from 2024 in a scatterplot:</p>
+			<figure>
+				<img src="crop_vs_own_2024.png" alt="" />
+				<figcaption>
+				Corporate ownership rate (2024) vs owner occupancy rate (2024) by neighborhood.
+				</figcaption>
+			</figure>
+			<p>Viewing the data this way (as opposed to two line charts) makes the relationship between these fields much clearer. We actually do see a strong correlation between the two rates: The R-squared value of the trendline is 0.77, with p < 0.0001. We can see that the slope of the trendline is negative, meaning that as owner occupancy rate increases, corporate rate decreases. This makes some intuitive sense, since more local owners means less property for corporate owners and vice versa. According to the <a href="https://www.homesforallmass.org/covid-evictions-report/hfamass-covid-evictions-report-short-03-22-screen-rfs.pdf">Housing Justice Beyond the Emergency</a> page, number of evictions tend to increase with corporate ownership rates, and decrease with owner occupancy rates, so it will be interesting to dig into this relationship in future explorations.  </p>
+			<p>Finally, I moved on to question three: <h4>"What does the demographic distribution of Boston look like?"</h4> As I mentioned earlier, information about race and age had been flattened in the data so, for example, counts of people identifying as Hispanic and 18+ would be one column, while Asian Americans and Pacific Islanders aged 0-17 would be another. Total population also had three columns (0-17, 18+, and all). This made it somewhat hard to visualize demographic data on the same graph. Consequently, I selected all rows containing age and race information, and created a pivot table. I then created two calculated groups (race and age) by splitting the combo names (e.g. "white_all" into "white" and "all"). I then created a hierarchy of age under race, so I could see the different age group counts within each race. Lastly, I filtered out the "total" group and the "all" column per group to get the following visualization:</p>
+			<figure>
+				<img src="demo_race_age_blue.png" alt="" />
+				<figcaption>
+				2020 census counts grouped first by respondent's race, and then by age (0-17 or 18+).
+				</figcaption>
+			</figure>
+			<p>As we can see from this figure, there were a lot of White adults in Boston in 2020. This was by far the largest bar in the chart. Interestingly, counts of individuals aged 0-17 were more evenly distributed between races, with slightly more Black and Hispanic children than White children.  Perhaps this points towards a trend in the shifting demographic composition of the city over time (see <a href="https://www.city-data.com/city/Boston-Massachusetts.html">City Data</a>). The linked page notes that in 2020, about 45% of Bostonians identified as White. Since we have the 2020 census data, we can verify that this claim plays out in our data.</p>
+			<figure>
+				<img src="demo_by_race_percentage.png" alt="" />
+				<figcaption>
+				2020 census counts grouped first by respondent's race, and labeled with percentage of overall population.
+				</figcaption>
+			</figure>
+			<p>Indeed, we see this checks out. While White was the largest single race in 2020, it was actually in the slight minority overall. We see that Black and Hispanic populations are the second largest, and American Indian / Alaska Natives are the smallest.</p>
+			<p>Next, I wanted to reintegrate our spatial data and see how demographics were distributed across the city. I created a new computed field which gave the fraction of BIPOC residents per neighborhood (out of total residents per neighborhood), and then applied it to our map. This graphic was inspired by the one in the NYT article from the readings,<a href="https://www.nytimes.com/interactive/2018/04/07/upshot/millions-of-eviction-records-a-sweeping-new-look-at-housing-in-america.html?smid=pl-share">In 83 Million Eviction Records, a Sweeping New Look at Housing in America</a> which overlayed eviction data on a map showing the neighborhoods of Richmond with majority White neighborhoods were highlighted in yellow. </p>
+			<figure>
+				<img src="boston_by_bipoc.png" alt="" />
+				<figcaption>
+					Fraction of BIPOC residents per neighborhood (out of total neighborhood population) from 2020 census data.
+				</figcaption>
+			</figure>
+			<p>Again, we can Google to see if this checks out. Based on <a href="https://statisticalatlas.com/neighborhood/Massachusetts/Boston/Mattapan/Race-and-Ethnicity">Statistical Atlas</a>, it seems like our numbers are reasonable. Next, I wanted to see how age was distributed across the city. I created another computed field showing fraction of neighborhood population between ages 0-17, and applied it to our map.</p>
+			<figure>
+				<img src="boston_by_age.png" alt="" />
+				<figcaption>
+					Fraction of neighborhood population between ages 0-17 from 2020 census data.
+				</figcaption>
+			</figure>
+			<p>These two visualizations add more depth to our earlier observation that a large part of the Boston population consisted of White adults. Looking at our maps, we can see some area (Beacon Hill, Downtown, North End, South Boston Waterfront, etc.) have a high concentration of White adults. Other neighborhoods, like Hyde Park, Mattapan, and Roxbury, are the opposite. We can also see where the maps differ. For example, West Roxbury has a minority of BIPOC, and a relatively high fraction of youths. This visualization feels more informative and connected to the city than the earlier bar charts were.</p>
+			<p>We can also compare the demographic maps to a map of corporate ownership</p>
+			<figure>
+				<img src="corp_own_2024_map.png" alt="" />
+				<figcaption>
+					Map of Boston colored by corporate ownership rate from 2024.
+				</figcaption>
+			</figure>
+			<p>and owner occupancy rates in 2024:</p>
+			<figure>
+				<img src="own_occ_2024_map.png" alt="" />
+				<figcaption>
+					Map of Boston colored by owner occupancy rate from 2024.
+				</figcaption>
+			</figure>
+			<p>As we might expect from the negative trendline in Figure 12, the two maps look quite different from one another. West Roxbury, Hyde Park, and Mattapan have relatively low corporate ownership rates and high owner occupancy rates.  Fenway and South Boston Waterfront show the opposite pattern. Comparing our various maps, it looks like Mattapan has a high concentration of BIPOC residents, as well as low corporate ownership and relatively high owner occupancy rate. As the readings noted, majority non-White neighborhoods tend to suffer from disproportionately high eviction rates, but neighborhoods with lower corporate ownership and higher owner occupancy tend to have fewer evictions. When we extend this exploration with the addition of eviction data in the future, we can see whether these factors are protective for the Mattapan population or not.</p>
+		</section>
+		<section>
+			<h2>Summary</h2>
+			<p>We first investigated how corporate ownership and owner occupancy rates have changed over time. We observed that corporate ownership rate has gone up a lot from 2024, with some areas experiencing as high as a 12x increase, with the lowest rate still above 2x (more than 100% increase from 2004 to 2024). Owner Occupancy rate went down a little, particularly for a few neighborhoods like Brighton, but generally stayed steadier. When we visualized the 2024 corporate ownership rate and the 2024 owner occupancy rate together, we saw a strong negative correlation between the two. We then took a deeper dive into the city's demographics, and saw that while White adults constitute the largest single population, Boston's youth are more diverse. We also visualized the distribution of demographics across neighborhoods on our map. Lastly, we combined our two main directions of exploration (corporate ownership / owner occupancy and demographics) by comparing the maps of corporate ownership and owner occupancy rates with the maps of demographic data.  Outside of my actual findings, I also took away a few lessons about keeping things simple (my headache with the chain of census data to neighborhood+zipcode to geojson), and the utility of restructuring data for easier analysis. As a new transplant to the Boston area, I really enjoyed learning more about the city through this data exploration. I also got to learn more about the capabilitys of Tableau, which was fun. </p>
+		</section>
+	</main>
+</body>
+</html>
