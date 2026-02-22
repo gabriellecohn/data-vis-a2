@@ -26,9 +26,27 @@
 
 			<h3>Overall Analysis Questions</h3>
 			<ol>
-				<li>How have corporate ownership rates and owner occupancy rates changed over time in Boston?</li>
-				<li>How are corporate ownership rates and owner occupancy related to each other?</li>
-				<li>What does the demographic distribution of Boston look like?</li>
+				<li>Where are the group housing units and institutions located in Boston?
+					<ul style="font-size: 0.9em; color: rgb(94, 94, 94); margin-top: 0.25em;">
+						<li>Rationale: Looking at the available census data, I saw there were various types of group and institutional housing, e.g. juvenile detention centers, nursing homes, and other (including homeless shelters and group homes). Although a grew up in Portland, OR, a city with a major homelessness crisis, I realized that I don't really know where resources like homeless shelters are located, so I wanted to learn more about this aspect of Boston.  </li>
+					</ul>
+				</li>
+				<li>
+					How have corporate ownership rates and owner occupancy rates changed over time in Boston?
+					<ul style="font-size: 0.9em; color: rgb(94, 94, 94); margin-top: 0.25em;">
+						<li>Rationale: I moved to the Boston area from Seattle, a city which has increasingly become a tech hub over the past decade. I, too, was a tech worker, and lived in the Downtown area among the many relatively new offices of Amazon, Apple, and Meta. However, from the articles I read and from personal experience, I know that this process of corporatization can lead to increased cost of living and higher rates of evictions. I wanted to understand how the story of corporate ownership had played out in Boston over the past two decades.</li>
+					</ul>
+				</li>
+				<li>How are corporate ownership rates and owner occupancy related to each other?
+					<ul style="font-size: 0.9em; color: rgb(94, 94, 94); margin-top: 0.25em;">
+						<li>Rationale: Corporate ownership and owner occupancy are both factors that can impact eviction rates, although in opposite directions. The articles talked about the relationship between each of these factors and eviction rates, but I wanted to learn more about how they related directly to each other.</li>
+					</ul>
+				</li>
+				<li>What does the demographic distribution of Boston look like?
+					<ul style="font-size: 0.9em; color: rgb(94, 94, 94); margin-top: 0.25em;">
+						<li>Rationale: Both of the articles I read talked about how evictions disproportionately effect majority non-White neighborhoods. I thought that exploring the demographic distribution of the city would provide useful groundwork for future investigations, and also help familiarize me with the lay of the land.  </li>
+					</ul>
+				</li>
 			</ol>
 		</section>
 
@@ -37,17 +55,14 @@
 
 			<h3>Datasets:</h3>
 			<ul>
-				<li><b>Corporate ownership rates and owner occupancy rates in Boston neighborhoods, 2004-2024</b></li>
-				<ul>
-					<li><b>Census and Corp Ownership and Occupancy Over Time</b>. This file contains information about owner occupancy and corporate ownership by year (2004 to 2004) and neighborhood as well as census data by neighborhood from the year 2020.</li>
-					<li><b>Boston Neighborhood Zipcodes</b>. This file contains a list of boston neighborhood names and their corresponding zipcodes.</li>
-				</ul>
-				<li><b>Boston Neighborhood Boundaries</b>. This is a geojson I downloaded from "Analyze Boston", which maps zipcodes to neighborhood names.</li>
-				<li><b>Boston geojson</b>. This is a geojson I downloaded from <a href="https://github.com/blackmad/neighborhoods/blob/master/boston.geojson">GitHub</a>, which maps directly to neighborhood names (reason explained in the Visualizations section).</li>
+				<li><b>Census and Corp Ownership and Occupancy Over Time</b>. This file contains information about owner occupancy and corporate ownership by year (2004 to 2024) for 21 neighborhoods in Boston (available <a href="https://data.boston.gov/dataset/property-assessment">here</a>), as well as census data "aggregated to approximate Boston neighborhood boundaries" from the year 2020 (available <a href="https://data.boston.gov/dataset/boston-neighborhood-boundaries-approximated-by-2020-census-block-groups1">here</a>). The census data contains demographic information like age and race, as well as housing information like number of total housing units and number of vacant units.</li>
+				<li><b>Boston Neighborhood Zipcodes</b>. This file contains a list of boston neighborhood names and their corresponding zipcodes.</li>
+				<li><b>Zip Codes</b>. This is a geojson I downloaded from "Analyze Boston" (available <a href="https://data.boston.gov/dataset/zip-codes">here</a>), which maps polygons (representing different neighborhoods) to their corresponding zipcodes and neighborhood names.</li>
+				<li><b>Boston geojson</b>. This is a geojson I downloaded from <a href="https://github.com/blackmad/neighborhoods/blob/master/boston.geojson">GitHub</a>, which maps polygons to neighborhood names (reason for the use of this second geojson is explained in the Visualizations section).</li>
 			</ul>
 
 			<h3>Use of Generative AI:</h3>
-			<p>I used generative AI to help me with Tableau commands (e.g. how to make a particular graph, or how to restructure a table).</p>
+			<p>I used generative AI to help me with Tableau commands (e.g. how to make a particular graph, or how to restructure a table) and web development (e.g. how to create a smaller subtitle).</p>
 
 			<h3>Visualizations:</h3>
 			<p>My first step was to open my data in Tableau, and start exploring some of the values. I quickly observed that most of the data did not vary by year:</p>
@@ -57,7 +72,7 @@
 				Note that the population count for this subgroup does not vary by year.
 				</figcaption>
 			</figure>
-			<p>When I looked at the associated metadata file, this confusion was resolved, as I saw that the population data is just gathered from a single census in 2020. These fixed values have been spread across all years (2004 to 2024). From this observation, I realized that I would not be able to answer questions about changes in demographics over time. However, I still had neighborhood spatial data, and temporal data for ownernship.</p>
+			<p>When I looked at the associated metadata file, this confusion was resolved, as I saw that the population data is just gathered from a single census in 2020. These fixed values have been spread across all years (2004 to 2024). From this observation, I realized that I would not be able to answer questions about changes in demographics over time. However, I still had neighborhood-level spatial data, and temporal data for ownernship.</p>
 			<p>Utilizing the spatial component of the data, I looked at different subpopulations grouped by neighborhood. For example, "college" vs "neighborhood" is shown below. "college" indicates individuals living in college or university housing. </p>
 			<figure>
 				<img src="college_v_neighborhood.png" alt="" />
@@ -104,11 +119,20 @@
 					Average corporate ownership rate by year from 2004 to 2024 (averaged across neighborhoods) using updated geojson data.
 				</figcaption>
 			</figure>
-			<p> My new geojson data also had some additional neighborhoods that were not present in the census and corporate ownership file (like the previous geojson, this one also had Back Bay in addition to several others) but importantly it wasn't <i>missing</i> neighborhoods. In future map visualizations, I simply filtered out the neighborhoods that are not present in our census data file. However, I think there are still questions worth exploring here. For example, it's very possible that "Back Bay" simply got folded into "Downtown" in the census data, which is something we would need to figure out to create a truly accurate map.  </p>
+			<p> My new geojson data also had some additional neighborhoods that were not present in the census and corporate ownership file (like the previous geojson, this one also had Back Bay in addition to several others) but in future map visualizations, I simply filtered out the neighborhoods that are not present in our census data file. However, I think there are still questions worth exploring here. For example, it's very possible that "Back Bay" simply got folded into "Downtown" in the census data, which is something we would need to figure out to create a truly accurate map.  </p>
 		</section>
 		<section>
 			<h2>Investigate Questions</h2>
-			<p>At this point, I decided it was time to start investigating my questions. My first question was <h4>"How have corporate ownership rates and owner occupancy rates changed over time in Boston?"</h4> I decided to start simple, and just look at how corporate ownership rates varied by neighborhood over time.</p>
+			<p>At this point, I decided it was time to start investigating my questions. My first question was <h4>"Where are the group housing units and institutions located in Boston?"</h4> I decided to start simple, and just look at how corporate ownership rates varied by neighborhood over time.</p>
+			<figure>
+				<img src="group_housing.png" alt="" />
+				<figcaption>
+				Count of population living in some for of institution or group housing by neighborhood.
+				</figcaption>
+			</figure>
+			In the figure above, the y-axis shows counts of population, and the colors of the bars indiciate a breakdown of the specific type of group/institutional housing. Note that I did not include military quarters or student housing for this visualization. Roxbury, Dorchester, and Downtown have the largest counts of population living in "Other" types of group housing, e.g. homeless shelters and group homes. Interestingly, some neighborhoods like the South Boston Waterfront do not seem to have any people living in institutions or group housing. In later visualizations, we will see that the South Boston Waterfront is a neighborhood with a high rate of corporate ownership. I wonder if corporate owners have an influence on the types of housing that is built in a particular neighborhood.
+			<!-- <p>At this point, I decided it was time to start investigating my questions. My first question was <h4>"How have corporate ownership rates and owner occupancy rates changed over time in Boston?"</h4> I decided to start simple, and just look at how corporate ownership rates varied by neighborhood over time.</p> -->
+			<p>For my next question, <h4>"How have corporate ownership rates and owner occupancy rates changed over time in Boston?"</h4> I decided to start simple, and just look at how corporate ownership rates varied by neighborhood over time.</p>
 			<figure>
 				<img src="corp_by_time_by_neighborhood.png" alt="" />
 				<figcaption>
